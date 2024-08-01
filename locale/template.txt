@@ -14,3 +14,4 @@ Rainbow Chestplate=
 Rainbow Leggings=
 Rainbow Boots=
 Rainbow Shield=
+Rainbow materials & equipment.=

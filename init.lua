@@ -21,10 +21,15 @@ minetest.register_node("rainbow_ore:rainbow_ore_block", {
 	description = S("Rainbow Ore"),
 	tiles = {"rainbow_ore_block.png"},
 	groups = {stone=2, cracky=3},
-	drop = "rainbow_ore:rainbow_ore_block",
+	drop = "rainbow_ore:rainbow_ore_lump",
 	is_ground_content = true,
 })
 
+--Define Rainbow_Ore_Lump node
+minetest.register_craftitem("rainbow_ore:rainbow_ore_lump", {
+	description = "Rainbow Ore Lump",
+	inventory_image = "rainbow_ore_lump.png",
+})
 
 --Define Rainbow_Ore_Ingot node
 minetest.register_craftitem("rainbow_ore:rainbow_ore_ingot", {
@@ -36,7 +41,7 @@ minetest.register_craftitem("rainbow_ore:rainbow_ore_ingot", {
 minetest.register_craft({
 	type = "cooking",
 	output = "rainbow_ore:rainbow_ore_ingot",
-	recipe = "rainbow_ore:rainbow_ore_block",
+	recipe = "rainbow_ore:rainbow_ore_lump",
 	cooktime = 10,
 })
 
@@ -127,6 +132,7 @@ minetest.register_tool("rainbow_ore:rainbow_ore_shovel", {
 })
 
 
+
 --Define Rainbow shovel crafting recipe
 minetest.register_craft({
 	output = "rainbow_ore:rainbow_ore_shovel",
@@ -152,7 +158,6 @@ minetest.register_tool("rainbow_ore:rainbow_ore_sword", {
 	}
 })
 
-
 --Define Rainbow sword crafting recipe
 minetest.register_craft({
 	output = "rainbow_ore:rainbow_ore_sword",
@@ -163,17 +168,72 @@ minetest.register_craft({
 	}
 })
 
+--Toolranks support
+if minetest.get_modpath("toolranks") then
+    minetest.override_item("rainbow_ore:rainbow_ore_pickaxe", {
+        original_description = S("Rainbow Pickaxe"),
+        description = toolranks.create_description("Rainbow Pickaxe"),
+        after_use = toolranks.new_afteruse
+    })
+	
+	minetest.override_item("rainbow_ore:rainbow_ore_axe", {
+        original_description = S("Rainbow Axe"),
+        description = toolranks.create_description("Rainbow Axe"),
+        after_use = toolranks.new_afteruse
+    })
+	
+	minetest.override_item("rainbow_ore:rainbow_ore_shovel", {
+        original_description = S("Rainbow Shovel"),
+        description = toolranks.create_description("Rainbow Shovel"),
+        after_use = toolranks.new_afteruse
+    })
+	
+	minetest.override_item("rainbow_ore:rainbow_ore_sword", {
+        original_description = S("Rainbow Sword"),
+        description = toolranks.create_description("Rainbow Sword"),
+        after_use = toolranks.new_afteruse
+    })
+	
+    end
 
 --Define Nyan Rainbow crafting recipe
-minetest.register_craft({
-	output = "default:nyancat_rainbow",
-	recipe = {
-		{"rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot"},
-		{"rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot"},
-		{"rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot"}
-	}
-})
+if minetest.get_modpath("nyancat") then
+	minetest.register_craft({
+		output = "nyancat:nyancat_rainbow",
+		recipe = {
+			{"rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot"},
+			{"rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot"},
+			{"rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot", "rainbow_ore:rainbow_ore_ingot"}
+		}
+	})
 
+	minetest.register_craft({
+		type = "shapeless",
+		output = "rainbow_ore:rainbow_ore_ingot 9",
+		recipe = {"nyancat:nyancat_rainbow"}		
+	})
+	
+	minetest.register_alias("rainbow_ore:rainbow", "nyancat:nyancat_rainbow")
+	
+else
+	minetest.register_node("rainbow_ore:rainbow", {
+		description = "Rainbow Block",
+		tiles = {
+			"nyancat_rainbow.png^[transformR90",
+			"nyancat_rainbow.png^[transformR90",
+			"nyancat_rainbow.png"
+		},
+		paramtype = "light",
+		light_source = default.LIGHT_MAX,
+		paramtype2 = "facedir",
+		groups = {cracky = 2},
+		is_ground_content = false,
+		sounds = default.node_sound_defaults(),
+	})
+	
+	minetest.register_alias("nyancat:nyancat_rainbow", "rainbow_ore:rainbow")
+	
+end
 
 --Make Rainbow Ore spawn
 local spawn_within = minetest.settings:get("rainbow_ore.spawn_within") or "default:stone"
